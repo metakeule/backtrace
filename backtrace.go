@@ -4,6 +4,8 @@ Package backtrace offers a simple backtrace for a max of 100 calls
 package backtrace
 
 import (
+	"fmt"
+	"net/http"
 	"runtime"
 )
 
@@ -36,4 +38,18 @@ func Filter(trace []FootPrint, fn func(index int, fp FootPrint) bool) []FootPrin
 		}
 	}
 	return res
+}
+
+// the number is the number of skipped entries in the backtrace
+type HTTPPanicCatcher int
+
+func (h HTTPPanicCatcher) Catch(recovered interface{}, rw http.ResponseWriter, req *http.Request) {
+	rw.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintln(rw, "500 Server panicked!\n\n\n")
+
+	btComplete := BackTrace()[int(h):]
+	for _, info := range btComplete {
+		// bf.WriteString(fmt.)
+		fmt.Fprintf(rw, "Function: %s\nFile: %s:%d\n\n", info.Function, info.File, info.Line)
+	}
 }
