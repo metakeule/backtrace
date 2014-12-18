@@ -34,9 +34,9 @@ func TestBackTrace(t *testing.T) {
 		t.Errorf("trace[0].Line should be %d but is %d", 10, trace[0].Line)
 	}
 
-	endFile := "github.com/metakeule/backtrace/backtrace_test.go"
+	endFile := "backtrace_test.go"
 	if !strings.HasSuffix(trace[0].File, endFile) {
-		t.Errorf("trace[0].File should end with %#v, but is %#v", trace[0].File)
+		t.Errorf("trace[0].File should end with %#v, but is %#v", endFile, trace[0].File)
 	}
 
 	traceFunction1 := "testing.tRunner"
